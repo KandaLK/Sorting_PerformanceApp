@@ -1,6 +1,5 @@
-Code is for Java application that allows the user to upload a 
-dataset in .csv format, select a column for sorting, apply various sorting algorithms, and evaluate their 
-performance based on execution time
+Code is for Java application that allows the user to upload a dataset in .csv format, select a column for sorting, apply various sorting algorithms, and evaluate their 
+performance based on execution time.
 
 
 Sorting Algorithms: 
@@ -13,7 +12,9 @@ o Heap Sort
 
 Performance Evaluation:
 
-  Nasure the execution time of each sorting algorithm and display it.
+  Measure the execution time of each sorting algorithm and display it.
   Identify and display the best-performing algorithm based on the shortest execution time.
   Real sorting preview for users. 
-  GUI Based Application
+  GUI Based JAVA Application
+
+
