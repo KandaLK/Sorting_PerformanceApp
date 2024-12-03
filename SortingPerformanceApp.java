@@ -13,7 +13,7 @@ public class SortingPerformanceApp extends JFrame {
     private JComboBox<String> columnSelector; //Column Headers
     private JButton sortButton;           // Individual Sorting button
     private JButton performanceButton;      // Button for get Performance of all algo
-    private DefaultTableModel tableModel; //For table 
+    private DefaultTableModel tableModel; 
     private JTable table;
     private JTextArea resultArea;
     private List<String[]> csvData;
@@ -391,11 +391,39 @@ public class SortingPerformanceApp extends JFrame {
     }
 
     private List<String[]> merge(List<String[]> left, List<String[]> right, int column) {
-        
+        List<String[]> result = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < left.size() && j < right.size()) {
+            if (compare(left.get(i)[column], right.get(j)[column]) <= 0) {
+                result.add(left.get(i++));
+            } else {
+                result.add(right.get(j++));
+            }
+        }
+        result.addAll(left.subList(i, left.size()));
+        result.addAll(right.subList(j, right.size()));
+        return result;
     }
 
     private void quickSort(List<String[]> data, int column, int low, int high) {
-    
+        if (low >= high) return;
+        String pivot = data.get(high)[column];
+        int lt = low, gt = high;
+        int i = low;
+
+        while (i <= gt) {
+            int cmp = compare(data.get(i)[column], pivot);
+            if (cmp < 0) {
+                Collections.swap(data, lt++, i++);
+            } else if (cmp > 0) {
+                Collections.swap(data, i, gt--);
+            } else {
+                i++;
+            }
+        }
+
+        quickSort(data, column, low, lt - 1);
+        quickSort(data, column, gt + 1, high);
     }
 
     
