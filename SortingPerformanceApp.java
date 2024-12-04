@@ -39,7 +39,6 @@ public class SortingPerformanceApp extends JFrame {
         JPanel filePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         JButton uploadButton = new JButton("Upload CSV File");
         uploadButton.setPreferredSize(new Dimension(130, 30));
-       
         uploadButton.addActionListener(e -> uploadCSVFile());
         filePanel.add(uploadButton);
 
@@ -261,10 +260,8 @@ public class SortingPerformanceApp extends JFrame {
             // Check if this algorithm is the fastest
              if (executionTimes < fastestTime) {
                 fastestAlgorithm = algorithmss;
-                fastestTime = executionTimes;
-                
+                fastestTime = executionTimes;  
             }
-    
        }
       
          JOptionPane.showMessageDialog(
