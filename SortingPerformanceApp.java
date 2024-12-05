@@ -15,7 +15,8 @@ public class SortingPerformanceApp extends JFrame {
 
     private JComboBox<String> columnSelector; //Column Headers
     private JButton sortButton;           // Individual Sorting button
-    private JButton performanceButton;      // Button for get Performance of all algo
+    private JButton performanceButton;   
+    private JButton saveButton; // Button for get Performance of all algo
     private DefaultTableModel tableModel; 
     private JTable table;
     private JTextArea resultArea;
@@ -25,7 +26,7 @@ public class SortingPerformanceApp extends JFrame {
  
     public SortingPerformanceApp() { //App window
         setTitle("Sorting Performance Evaluation App");
-        setSize(800, 700);
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         initializeComponents();
@@ -65,6 +66,12 @@ public class SortingPerformanceApp extends JFrame {
         performanceButton.setEnabled(false);
         performanceButton.addActionListener(e -> bestAlgorithm());
         filePanel.add(performanceButton); 
+
+        saveButton = new JButton("Save");
+        saveButton.setPreferredSize(new Dimension(120, 30));
+        saveButton.setEnabled(false);
+        saveButton.addActionListener(e -> saveSortedCSV());
+        filePanel.add(saveButton); 
 
         topPanel.add(filePanel, BorderLayout.CENTER);
 
@@ -162,6 +169,102 @@ public class SortingPerformanceApp extends JFrame {
             return null;
         }
         return data;
+    }
+    private void saveSortedCSV() {
+    if (table.getModel().getRowCount() == 0) {
+        JOptionPane.showMessageDialog(this, "No data to save!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Prompt user for file name
+    String fileName = JOptionPane.showInputDialog(this, 
+        "Enter a name for the sorted CSV file:", 
+        "Save Sorted CSV", 
+        JOptionPane.PLAIN_MESSAGE);
+
+    // Check if user cancelled or entered an empty name
+    if (fileName == null || fileName.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "File saving cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    // Sanitize filename to remove invalid characters
+    fileName = fileName.replaceAll("[^a-zA-Z0-9_-]", "_");
+    
+    // Ensure filename ends with .csv
+    if (!fileName.toLowerCase().endsWith(".csv")) {
+        fileName += ".csv";
+    }
+
+    // Create file chooser for directory selection
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Choose Directory to Save Sorted CSV");
+    fileChooser.setSelectedFile(new File(fileName));
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    fileChooser.setApproveButtonText("Save");
+    fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
+
+    // Show save dialog
+    int userSelection = fileChooser.showSaveDialog(this);
+
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        File fileToSave = fileChooser.getSelectedFile();
+        
+        // Ensure file has .csv extension
+        if (!fileToSave.getName().toLowerCase().endsWith(".csv")) {
+            fileToSave = new File(fileToSave.getAbsolutePath() + ".csv");
+        }
+
+        // Check if file already exists and confirm overwrite
+        if (fileToSave.exists()) {
+            int confirmOverwrite = JOptionPane.showConfirmDialog(
+                this, 
+                "File already exists. Do you want to overwrite it?", 
+                "Confirm Overwrite", 
+                JOptionPane.YES_NO_OPTION
+            );
+            
+            if (confirmOverwrite != JOptionPane.YES_OPTION) {
+                return; // User chose not to overwrite
+            }
+        }
+
+        try {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(fileToSave))) {
+                // Write headers
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                    writer.print(table.getColumnName(i) + (i < table.getColumnCount() - 1 ? "," : ""));
+                }
+                writer.println();
+
+                // Write data
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    for (int col = 0; col < table.getColumnCount(); col++) {
+                        writer.print(table.getValueAt(row, col) + (col < table.getColumnCount() - 1 ? "," : ""));
+                    }
+                    writer.println();
+                }
+
+                // Success message with file location
+                JOptionPane.showMessageDialog(this, 
+                    "File saved successfully!\nLocation: " + fileToSave.getAbsolutePath(), 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error saving file: " + ex.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error creating file: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+     }
     }
 
     
