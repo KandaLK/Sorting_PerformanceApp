@@ -8,6 +8,9 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+
+//https://github.com/KandaLK/Sorting_PerformanceApp.git <- Github Link
+
 public class SortingPerformanceApp extends JFrame {
 
     private JComboBox<String> columnSelector; //Column Headers
@@ -22,7 +25,7 @@ public class SortingPerformanceApp extends JFrame {
  
     public SortingPerformanceApp() { //App window
         setTitle("Sorting Performance Evaluation App");
-        setSize(900, 700);
+        setSize(800, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         initializeComponents();
@@ -144,7 +147,7 @@ public class SortingPerformanceApp extends JFrame {
                 String[] row = line.split(","); //split into a array 
                 boolean isEmpty = true;  // flag for checks
                 for (String value : row) {
-                    if (!value.trim().isEmpty()) {
+                    if (!value.trim().isEmpty()) { //if check the data is over
                         isEmpty = false;
                         break;
                     }
@@ -373,7 +376,7 @@ public class SortingPerformanceApp extends JFrame {
                     data.set(j, data.get(j - gap));
                 }
                 data.set(j, temp);
-            }
+            } 
         }
     }
 
@@ -450,7 +453,7 @@ public class SortingPerformanceApp extends JFrame {
             Collections.swap(data, i, largest);
             heapify(data, column, n, largest);
         }
-    }
+    } 
 
     private int compare(String a, String b) {
         
